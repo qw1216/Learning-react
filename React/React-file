@@ -1,0 +1,452 @@
+react的特点,组件是react最重要的内容
+const title = React.createElement('h1', null, 'hello react');
+ReactDOM.render(title, document.getElementById('root'));
+第一步: 首先创建react元素 / 通过React.createElement()
+第一个参数是“元素名称”,,第二个参数是“元素属性”第三个参数是“元素的子节点”
+第二步: 渲染react元素 / 通过ReactDOM.render()
+第一个参数是“要渲染的react元素”,第二个参数是挂载点(就是获取元素)
+react脚手架
+初始化项目,命令: npx create-react my-app
+然后cd 进入my-app中 / 输入 npm start启动项目
+JSX简介
+JSX是javascript XML的简写,表示在script代码中写XML(html)格式的代码
+使用JSX语法创建react元素
+const title = <h1>hello JSX</h1>; / 使用JSX创建react元素
+使用ReactDOM.render()方法渲染react元素到页面
+ReactDOM.render(title, document.getElementById("root")); / 渲染到页面
+JSX注意点,React元素的属性名使用驼峰命名法
+没有子节点的React元素可以使用/>结束 / 比如 <span />
+推荐: 使用小括号包裹JSX内容,从而避免js中的自动插入分号陷阱
+const title = (
+  <h1 className="title">
+    hello JSX
+  </h1>
+)
+JSX嵌入javascript表达式
+const name = 'kfbk';
+const title = (
+  <h1>
+  hello JSX, {name}
+  </h1>
+)
+注意点: React元素的属性名使用驼峰命名法
+JSX的列表渲染
+如果要渲染一组数据,应该使用数组的map()方法
+注意: 渲染列表的时候应该添加key属性
+map()遍历谁,就给谁,就给谁添加key属性
+const songs = [
+  { id: 2, name: "1" },
+  { id: 3, name: "2" },
+]
+const list = (
+  <ul>
+   {songs.map(item => <li key={item.id}>{item.name}</li>)}
+  </ul>
+)
+JSX的样式处理
+类名——calssName
+React组件的两种创建方式
+第一: 函数组件: 使用js的函数(或者箭头函数)创建组件
+注意点,第一:函数名称必须大写字母开头
+第二: 函数组件必须有return返回值,表示该组件的结构
+第三: 如果不想渲染任何内容,需要return一个null才不会报错
+渲染组件: 使用函数名作为组件标签名渲染
+// 函数组件
+function Hello() {
+  return (
+    <div>这是我的第一个函数组件</div>
+  )
+}
+// 使用箭头函数组件
+const Hello = () => <div>这是我的第一个函数组件</div>;
+// 渲染组件
+ReactDOM.render(<Hello />, document.getElementById('root'))
+第二: 使用类创建组件,使用Es6的class创建组件
+第一: 类名必须使用大写字母开头
+第二: 类组件应该继承React.Component父类,从而可以使用父类提供的方法或属性
+第三: 类组件中必须提供render()方法
+第四: render()方法必须有返回值,表示该组件的结构
+第五: 如果不想渲染任何内容,需要return一个null才不会报错
+class Hello extends React.Component {
+  render() {
+    return (
+      <div>这是我的第一个函数组件</div>
+    )
+  }
+}
+把组件抽离为独立的JS问文件
+组件作为一个独立的个体,一般都会放到一个单独的JS文件中
+第一: 创建一个Hello.js, 在Hello.js中导入React, 然后在创建组件(函数或者类)
+第四: 必须到处组件: export default Hello(文件名)
+// 导入react
+import React from "react";
+// 创建一个组件
+class Hello extends React.Component {
+   render() {
+      return (
+         <div>这是我的第一个抽离到JS文件中的组件</div>
+      )
+   }
+}
+// 导出组件
+export default Hello
+React事件绑定
+语法: on+事件名称= {事件处理程序}, 比如: onClick = { () => { }}
+注意: Reach事件采用驼峰命名法
+在类中组件中绑定事件
+class App extends React.Component {
+  handleClick () {
+    console.log('点击事件触发')
+  }
+  render () {
+    return (
+      <button onClick={this.handleClick}>点击</button>
+    )
+  }
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+在函数组件中绑定事件
+在函数组件中是没有this的,设置处理程序直接写函数名
+function App() {
+ function handleClick() {
+    console.log("点击事件触发了");
+  }
+  return (
+     <button onClick={handleClick}>点击</button>
+  )
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+React事件处理
+我们可以通过事件处理程序的参数获取到事件对象
+阻止浏览器的默认行为,让超链接不跳转 / e.preventDefault();方法可以阻止
+class App extends React.Component {
+  handleClick (e) {
+    e.preventDefault();
+    console.log('a标签的点击事件触发');
+  }
+ 
+  render() {
+    return (
+      <a href="http://baidu.com" onClick={this.handleClick}>百度</a>
+    )
+  }
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+有状态组件和无状态组件
+函数组件又叫(无状态组件),类组件又叫(有状态组件)
+函数组件没有自己的状态(数据),只负责数据展示(静)
+类组件是有自己的状态的
+如果需要数据有变化,就使用类组件,如果不需要数据变化,就使用函数组件
+组件中的state和setState
+状态(state)即数据,是组件内部的私有数据,只能在组件内部使用
+state的值是一个对象,表示一个组件中可以有多个数据
+state基本使用
+获取状态(数据): 通过this.state / this.state.(count自己初始化的名称)
+通过{this.state.count} / 拿到初始化值后.渲染到页面中
+class App extends React.Component {
+  // 简化初始化state
+  state = {
+    count: 0,
+  };
+  render() {
+    return (
+      <div>
+        <h1>计数器: {this.state.count}</h1> // 拿到值渲染到页面
+      </div>
+    );
+  }
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+setState()基本使用修改状态
+状态(数据)是可变的
+语法: this.setState({要修改的数据}) 
+注意: 不要直接修改state中的值,这个是错误的
+setstate()作用 / 第一: 修改state(修改了状态,每次拿到的都是新数据) 
+setstate()作用 / 第二: 更新UI(当我们(状态改变后,他会把最新的值渲染到页面中)
+class App extends React.Component {
+  state = {
+    count: 0,
+  };
+  render() {
+    return (
+      <div>
+        <h2>计数器: {this.state.count}</h2>
+        <button
+          onClick={() => {
+            this.setState({
+              count: this.state.count + 1,
+            });
+            console.log('计数器发生了改变');
+          }}
+        >
+          点击+1
+        </button>
+      </div>
+    );
+  }
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+从JSX中抽离事件处理程序
+JSX中参杂过多JS代码,会显得很混乱, 需要将逻辑抽离到单独的方法中
+render方法中的this指向的是组件实例
+抽离后,事件处理程序中的this值为undefined, 希望this指向组件实例
+事件绑定中this的指向
+第一种使用: 箭头函数调用方法,利用箭头函数自身不绑定this的特点
+<button onClick={() => this.onIncrement()}>点击+1</button>
+第二种使用: Function.prototype.bind()方法,利用bind()方法,将事件处理的this绑定到一起
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { // 只要写了constructor就可以在里面初始化state了
+      count: 0,
+    };
+    this.onIncrement = this.onIncrement.bind(this);
+  }
+第三种使用: class的实例方法来解决
+利用箭头函数形式的class实例方法
+注意: 该语法是实验性语法,但是由于babel的存在可以直接使用
+onIncrement = () => {
+    console.log(this);
+    this.setState({
+      count: this.state.count + 1,
+    });
+  }
+React表单处理
+react中有两种表单处理方式 / 第一种受控组件 / 第二种非受控组件(dom方式)
+受控组件
+html中的表单元素是可以输入的,也有自己的可变状态
+但是在React中可变状态保存在state中,只能通过setState()方法来修改
+React将state与表单元素值的value绑定到一起,(由state的值来控制表单元素的值)
+受控组件步骤: 在state中添加一个状态,作为表单元素的value值(控制表单元素值的来源)
+给表单元素绑定change事件,将表单元素的值设置为sate的值(控制表单元素的变化)
+class App extends React.Component {
+  state = {
+    txt: "",
+  };
+  handleChange = e => { // 这里的e是事件对象
+    this.setState({
+      txt: e.target.value
+    })
+  };
+  render() {
+    return (
+      <div>
+        <input type="text" value={this.state.txt}
+        onChange={this.handleChange}
+        />
+      </div>
+    );
+  }
+}
+ReactDOM.render(<App />, document.getElementById("root"));
+注意: 文本框, textarea, 下拉框操作的都是value属性
+复选框操作的是checke属性
+非受控组件
+说明: 借助于 ref,使用原生dom方式来获取表单元素值
+ref的作用: 用来获取dom或组件
+组件通讯介绍
+组件是独立且封闭的单元,默认情况下,只能够使用组件的数据
+在组件化过程中,我们将一个完整的功能,拆封成为多个组件,以更好的完成整个应用的功能
+这个过程中组件之间不可避免的要共享某些数据,为了实现这些功能
+就需要打破组件的独立封闭性,这个过程就是组件通讯
+组件的props
+组件是封闭的,要接收外部数据应该通过props来实现
+props的作用: 接收传递给组件的数据 / 传递数据: 给组件标签添加属性
+接收数据: 函数组件中使用参数props接收数据
+props是一个对象,不论我们传递多少个属性都可以拿到
+通过函数组件获取props
+const Hello = props => {
+  console.log(props);
+  return (
+    <div>
+      <h2>props: {props.name}</h2>
+    </div>
+  );
+};
+// 传递参数
+ReactDOM.render(<Hello name="卡夫不卡" />, document.getElementById("root"));
+通过类组件获取props
+类组件中通过this.props来接收数据
+class Hello extends React.Component {
+  render () {
+    console.log(this.props);
+     return (
+       <div>
+         <h2> props: {this.props.name}</h2> // 通过this.props接收
+       </div>
+     )
+  }
+}
+// 传递数据
+ReactDOM.render(<Hello name="卡夫不卡" />, document.getElementById("root"));
+props特点: 可以给组件传递任意类型的数据
+如果想传递非字符串的数据,就必须使用 {}包裹起来, 也可以传递数组{[1,2,3,4,5]}
+props是一个只读的对象,只能读取属性的值,无法修改对象
+注意: 使用类组件,如果写了构造函数,应该将props传递给super(),否则构造函数中无法获取
+class Hello extends React.Component {
+  constructor (props) { // 推荐使用props作为constrcutor的参数使用
+   super(props)
+   console.log(props);
+  }
+  render () {
+    console.log(this.props);
+     return (
+       <div>
+         <h2> props: {this.props.name}</h2>
+       </div>
+     )
+  }
+}
+组件通讯的三种返回式
+第一种: 父组件 -> 子组件
+第一步: 父组件提供要传递的state数据
+第二步: 给子组件添加属性,值为state中的数据
+第三步: 子组件中通过props接收父组件中传递的数据
+// 父组件
+class Parent extends React.Component {
+  state = {
+    name: "卡夫不卡",
+  };
+  render() {
+    return (
+      <div className="parent">
+        父组件:
+        <Child name={this.state.name} /> {/* 传递数据给子组件 */}
+      </div>
+    );
+  }
+}
+// 子组件
+const Child = (props) => { // 子组件通过props就可以拿到父组件传递的数据
+  console.log("子组件: ", props);
+  return (
+    <div className="child">
+      <p>子组件,接收到父组件的数据: {props.name}</p> {/*  渲染到页面 */}
+    </div>
+  );
+};
+ReactDOM.render(<Parent />, document.getElementById("root"));
+第二种: 子组件 -> 父组件
+利用回调函数,父组件提供回调,子组件调用,将要传递的数据作为回调函数的参数
+第一步: 父组件提供一个回调函数
+第二步: 将该函数作为属性的值,传递给子组件
+第三步: 子组件通过props调用回调函数
+第四步: 将子组件的数据作为参数传递给回调函数
+// 父组件
+class Parent extends React.Component {
+  state = {
+    parentMsg: "",
+  };
+  // 提供回调函数,用来接收数据
+  getChildMsg = (date) => {
+    console.log("接收到子组件中传递过来的参数: ", date);
+    this.setState({
+      parentMsg: date,
+    });
+  };
+  render() {
+    return (
+      <div className="parent">
+        父组件: {this.state.parentMsg}
+        <Child getMsg={this.getChildMsg} />
+      </div>
+    );
+  }
+}
+// 子组件
+class Child extends React.Component {
+  state = {
+    msg: "卡夫不卡",
+  };
+  handleClick = () => {
+    // 子组件调用父组件中传递过来的回调函数
+    this.props.getMsg(this.state.msg);
+  };
+  render() {
+    return (
+      <div>
+        子组件:<button onClick={this.handleClick}>点击,给父组件传递数据</button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<Parent />, document.getElementById("root"));
+第三种: 兄弟组件 
+将共享状态提升到最近的的公共父组件中,由公共组件管理这个状态
+公共父组件职责,提供共享状态,提供操作共享状态的方法
+要通讯的子组件只需要通过props接收状态或者操作状态的方法
+// 父组件
+class Counter extends React.Component { // 在父组件中提供共享状态
+  state = {
+    count: 0,
+  };
+  onIncrement = () => { // 提供修改状态方法
+    this.setState({
+      count: this.state.count + 1,
+    });
+  };
+  render() {
+    return (
+      <div>
+        <Child1 count={this.state.count} />  {/* 把父组件中的状态通过属性传递给子组件 */}
+        <Child2 onIncrement={this.onIncrement}/>
+      </div>
+    );
+  }
+}
+const Child1 = (props) => {
+  // 子组件中通过props接收到父组件传递过来的数据
+  return <h1>计数器: {props.count}</h1>; // 子组件接收到父组件的数据后就可以展示到页面中, 直接props.count就接收到数据
+};
+const Child2 = (props) => {
+  return <button onClick={() => props.onIncrement()}>+1</button>;
+};
+ReactDOM.render(<Counter />, document.getElementById("root"));
+Context使用
+Context作用: 跨组件传递数据(比如,主题,语言等)
+首先调用 React.createContext()创建Provider(提供数据)和Consumer(消费数据)
+const { Provider, ConSumer } = React.createContext();// 创建context得到两个组件
+第二步: 使用Provider组件作为父节点
+class Element extends React.Component {
+  render() {
+    return (
+      <Provider> // 使用provider包裹起来作为父组件
+        <div className="app">
+          <Node />
+        </div>
+      </Provider>
+    );
+  }
+}
+第三步: 设置value属性,表示要传递的数据 / 在provider里面提供一个value属性
+第四步: 调用Consumer组件接收数据
+props深入
+props的children属性: 表示组件标签的子节点,当组件标签有子节点时,props就会有该属性
+const Index = (props) => {
+  console.log(props);
+  return (
+    <div>
+      <h1>组件标签的子节点: </h1>
+      {props.children}  {/* 这样就可以把子节点渲染到页面上 */}
+    </div>
+  );
+};
+ReactDOM.render(<Index>我是子节点</Index>, document.getElementById("root"));
+children属性与普通的props一样,值可以是任意数据类型的(也可以传组件和函数)
+const Test = () => <button>我是button组件</button>; // 设置另一个组件
+const Index = (props) => {
+  console.log(props);
+  return (
+    <div>
+      <h1>组件标签的子节点: </h1>
+      {props.children} {/* 这样就可以把children子节点渲染到页面上 */}
+    </div>
+  );
+};
+ReactDOM.render(
+  <Index>
+    <Test /> // 把一个组件传入到children属性中
+  </Index>,
+  document.getElementById("root")
+);
